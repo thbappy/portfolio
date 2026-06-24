@@ -23,6 +23,9 @@ export default function HeroSection({
   const [typewriterText, setTypewriterText] = useState("");
   const typewriterDone = useRef(false);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [cvModalOpen, setCvModalOpen] = useState(false);
+
+
 
   // Typewriter effect for title
   useEffect(() => {
@@ -75,9 +78,7 @@ export default function HeroSection({
 
           <GradientButton
             variant="outline"
-            href={personalInfo.cvUrl}
-            download="Md_Tanbeer_Hasan_CV.pdf"
-            target="_blank"
+            onClick={() => setCvModalOpen(true)}
           >
             <FontAwesomeIcon
               icon={icons.faDownload}
@@ -149,7 +150,7 @@ export default function HeroSection({
             <div className="absolute inset-4 rounded-2xl border border-dashed border-emerald-400/30 animate-[spin_15s_linear_infinite_reverse]" />
 
             {/* Glowing spot background */}
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500" />
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500 pointer-events-none" />
 
             {/* The Image inside a 3D Tilt container */}
             <div
@@ -195,6 +196,68 @@ export default function HeroSection({
               >
                 Md. Tanbeer Hasan
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* CV Options Modal */}
+      {cvModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-xl transition-all duration-300 zoom-modal-overlay"
+          onClick={() => setCvModalOpen(false)}
+        >
+          {/* 3D Glass Card for CV */}
+          <div
+            className="relative w-[90%] max-w-[400px] rounded-2xl p-8 bg-gradient-to-tr from-emerald-500/10 to-cyan-500/10 border border-white/10 shadow-2xl flex flex-col items-center text-center group pointer-events-auto transform transition-all duration-300 ease-out modal-3d-card"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              perspective: "1000px",
+            }}
+          >
+            {/* Close button inside the card's top right corner */}
+            <button
+              className="absolute -top-3 -right-3 w-10 h-10 flex items-center justify-center rounded-full bg-black/90 border border-white/20 text-white text-xl hover:bg-red-500/80 hover:border-red-500/80 transition-all duration-300 hover:rotate-90 z-50 cursor-pointer shadow-lg"
+              onClick={() => setCvModalOpen(false)}
+              title="Close Panel"
+            >
+              ×
+            </button>
+
+            {/* Glowing spot background */}
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-10 blur-xl group-hover:opacity-20 transition-opacity duration-500 pointer-events-none" />
+
+            {/* Icon decoration */}
+            <div className="w-16 h-16 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center mb-4 text-teal-400 text-2xl shadow-lg">
+              <FontAwesomeIcon icon={icons.faAddressCard} className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-2xl font-bold text-white mb-2">Curriculum Vitae</h3>
+            <p className="text-gray-400 text-sm mb-6">
+              Would you like to download my CV locally or preview it in a new browser tab?
+            </p>
+
+            {/* Options Buttons */}
+            <div className="flex flex-col w-full gap-3">
+              {/* Download Option */}
+              <a
+                href={personalInfo.cvUrl}
+                download="Tanbeer_Hasan_CV.pdf"
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-black font-semibold tracking-wide flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/25 active:scale-[0.98] cursor-pointer"
+              >
+                <FontAwesomeIcon icon={icons.faDownload} className="w-4 h-4" />
+                Download CV
+              </a>
+
+              {/* Preview Option */}
+              <a
+                href="/cv-preview"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3.5 px-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-medium tracking-wide flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] cursor-pointer"
+              >
+                <FontAwesomeIcon icon={icons.faGlobe} className="w-4 h-4" />
+                Preview in Browser
+              </a>
             </div>
           </div>
         </div>

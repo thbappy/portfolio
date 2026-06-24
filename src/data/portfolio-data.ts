@@ -115,7 +115,7 @@ export const personalInfo = {
   title: "Full Stack Developer",
   bio: "Develop expertise in the software industry that would enhance my knowledge and skill in software development and enable me to apply my knowledge and skills to self and company growth.",
   profileImageUrl: "/profile.webp",
-  cvUrl: "/Md_Tanbeer_Hasan_CV.pdf",
+  cvUrl: "/Tanbeer_Hasan_CV.pdf",
 };
 
 export const contactInfo: ContactInfo = {
