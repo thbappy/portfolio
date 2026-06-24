@@ -442,3 +442,22 @@ html {
   background-color: rgba(20, 184, 166, 0.5);
   color: white;
 }
+
+/* ── 3D Profile Zoom Modal ── */
+.zoom-modal-overlay {
+  animation: modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+}
+

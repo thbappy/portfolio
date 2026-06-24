@@ -22,6 +22,7 @@ export default function HeroSection({
   const revealRef = useScrollReveal<HTMLElement>(0);
   const [typewriterText, setTypewriterText] = useState("");
   const typewriterDone = useRef(false);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   // Typewriter effect for title
   useEffect(() => {
@@ -105,17 +106,99 @@ export default function HeroSection({
 
       {/* Profile Image */}
       <div className="flex-shrink-0 flex justify-center items-center">
-        <div className="profile-img-container">
+        <div 
+          className="profile-img-container cursor-zoom-in hover:scale-105 active:scale-95 transition-all duration-300 group"
+          onClick={() => setIsZoomed(true)}
+          title="Click to view in 3D Zoom"
+        >
           <img
             src={personalInfo.profileImageUrl}
             alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
-            className="profile-img"
+            className="profile-img group-hover:brightness-110 transition-all duration-300"
             width={250}
             height={250}
             loading="eager"
           />
         </div>
       </div>
+
+      {/* 3D Zoomed Profile Modal */}
+      {isZoomed && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl transition-all duration-300 zoom-modal-overlay"
+          onClick={() => setIsZoomed(false)}
+        >
+          {/* 3D Glass Frame Container */}
+          <div
+            className="relative w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] md:w-[480px] md:h-[480px] rounded-2xl p-6 bg-gradient-to-tr from-emerald-500/20 to-cyan-500/20 border border-white/10 shadow-2xl flex items-center justify-center group pointer-events-auto"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              perspective: "1000px",
+            }}
+          >
+            {/* Close button inside the card's top right corner */}
+            <button
+              className="absolute -top-3 -right-3 w-10 h-10 flex items-center justify-center rounded-full bg-black/90 border border-white/20 text-white text-xl hover:bg-red-500/80 hover:border-red-500/80 transition-all duration-300 hover:rotate-90 z-50 cursor-pointer shadow-lg"
+              onClick={() => setIsZoomed(false)}
+              title="Close Zoom"
+            >
+              ×
+            </button>
+            {/* Inner rotating glowing rings */}
+            <div className="absolute inset-2 rounded-2xl border border-dashed border-cyan-400/40 animate-[spin_20s_linear_infinite]" />
+            <div className="absolute inset-4 rounded-2xl border border-dashed border-emerald-400/30 animate-[spin_15s_linear_infinite_reverse]" />
+
+            {/* Glowing spot background */}
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500" />
+
+            {/* The Image inside a 3D Tilt container */}
+            <div
+              className="relative w-full h-full rounded-xl overflow-hidden border-2 border-white/10 bg-black/60 shadow-inner flex items-center justify-center transition-all duration-300 ease-out"
+              style={{
+                transformStyle: "preserve-3d",
+                transform: "translateZ(50px)",
+              }}
+              onMouseMove={(e) => {
+                const el = e.currentTarget;
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                const tiltX = (y / (rect.height / 2)) * -25; // max 25 degrees
+                const tiltY = (x / (rect.width / 2)) * 25;   // max 25 degrees
+
+                el.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(80px)`;
+                el.style.boxShadow = `${-tiltY * 1.5}px ${tiltX * 1.5}px 35px rgba(0, 255, 136, 0.3)`;
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.transform = "rotateX(0deg) rotateY(0deg) translateZ(50px)";
+                el.style.boxShadow = "none";
+              }}
+            >
+              <img
+                src={personalInfo.profileImageUrl}
+                alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+                className="w-full h-full object-cover select-none pointer-events-none transition-transform duration-500"
+                style={{
+                  objectPosition: "50% 15%",
+                  transform: "scale(1.02)",
+                }}
+              />
+
+              {/* Extra 3D floating tag */}
+              <div 
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 py-2 px-4 rounded-full bg-black/80 border border-teal-500/30 text-teal-400 text-xs sm:text-sm font-semibold tracking-wider shadow-lg select-none"
+                style={{
+                  transform: "translateZ(40px)",
+                }}
+              >
+                Md. Tanbeer Hasan
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
